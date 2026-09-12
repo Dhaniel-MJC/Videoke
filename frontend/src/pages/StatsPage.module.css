@@ -1,0 +1,601 @@
+/* StatsPage Styles */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 40px 20px;
+  color: white;
+}
+
+.maxWidth {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #999;
+  margin: 0;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 50px;
+}
+
+.statCard {
+  background: rgba(102, 126, 234, 0.1);
+  border: 2px solid #667eea;
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s ease;
+  cursor: default;
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+
+.statCard:nth-child(1) { animation-delay: 0.1s; }
+.statCard:nth-child(2) { animation-delay: 0.2s; }
+.statCard:nth-child(3) { animation-delay: 0.3s; }
+.statCard:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statCard:hover {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: #764ba2;
+  transform: translateY(-4px);
+}
+
+.statIcon {
+  font-size: 40px;
+  min-width: 50px;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  color: #667eea;
+}
+
+.statMax {
+  font-size: 12px;
+  color: #666;
+  margin: 4px 0 0 0;
+}
+
+/* Loading & Error */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #333;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorBox {
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 24px;
+  color: #fca5a5;
+  text-align: center;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.emptyIcon {
+  font-size: 64px;
+  margin: 0 0 20px 0;
+}
+
+.emptyText {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #fff;
+}
+
+.emptySubtext {
+  font-size: 16px;
+  color: #999;
+  margin: 0;
+}
+
+/* Chart */
+.section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #fff;
+}
+
+.chartContainer {
+  margin-bottom: 20px;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 200px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.chartBar {
+  flex: 1;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+}
+
+.chartBarFill {
+  width: 100%;
+  background: #667eea;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
+}
+
+.chartBar:hover .chartBarFill {
+  filter: brightness(1.2);
+}
+
+.chartLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+  padding: 0 10px;
+}
+
+.chartCaption {
+  font-size: 12px;
+  color: #666;
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
+/* Grid Layout for Sections */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Songs List */
+.songsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.songItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.songItem:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+}
+
+.songRank {
+  font-size: 18px;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 40px;
+  text-align: center;
+}
+
+.songInfo {
+  flex: 1;
+}
+
+.songTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #fff;
+}
+
+.songArtist {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 6px 0;
+}
+
+.songStats {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+.songBest {
+  text-align: center;
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.bestLabel {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.bestValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: #667eea;
+  margin: 4px 0 0 0;
+}
+
+/* Performances List */
+.performancesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.performanceItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.performanceItem:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.perfTime {
+  min-width: 80px;
+}
+
+.perfDate {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.perfInfo {
+  flex: 1;
+}
+
+.perfTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #fff;
+}
+
+.perfArtist {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.perfScore {
+  text-align: right;
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.scoreValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: #667eea;
+  margin: 0;
+}
+
+.scoreLabel {
+  font-size: 10px;
+  color: #999;
+  margin: 2px 0 0 0;
+}
+
+/* Best Performance Card */
+.bestPerfCard {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 2px solid #667eea;
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.bestPerfHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bestPerfTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #fff;
+}
+
+.bestPerfArtist {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+}
+
+.bestPerfScore {
+  text-align: right;
+}
+
+.bestPerfNumber {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fbbf24;
+  margin: 0;
+}
+
+.bestPerfOutOf {
+  font-size: 14px;
+  color: #999;
+  margin: 0;
+}
+
+/* Metrics Grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.metricItem:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-4px);
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .header {
+    margin-bottom: 30px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .section {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .chart {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+  }
+
+  .maxWidth {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .statsGrid {
+    gap: 12px;
+  }
+
+  .statCard {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .statIcon {
+    font-size: 32px;
+    min-width: 40px;
+  }
+
+  .statValue {
+    font-size: 24px;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bestPerfNumber {
+    font-size: 36px;
+  }
+
+  .chart {
+    height: 120px;
+    gap: 4px;
+  }
+
+  .songItem,
+  .performanceItem {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .songBest,
+  .perfScore {
+    width: 60px;
+  }
+}

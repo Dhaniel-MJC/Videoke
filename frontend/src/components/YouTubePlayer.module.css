@@ -1,0 +1,282 @@
+/* YouTubePlayer Styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  max-height: 600px;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.artist {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Player Wrapper */
+.playerWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: #000;
+}
+
+.playerContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+}
+
+/* Play Button */
+.playBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.playBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.playBtn:active {
+  transform: translateY(0);
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    #667eea 0%,
+    #667eea var(--progress),
+    #444 var(--progress),
+    #444 100%
+  );
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.progressBar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s;
+}
+
+.progressBar::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
+
+.progressBar::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #667eea;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s;
+}
+
+.progressBar::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
+
+.progressBar::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.progressBar::-moz-range-progress {
+  background: #667eea;
+  height: 6px;
+  border-radius: 3px;
+}
+
+/* Time Display */
+.time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+  gap: 8px;
+}
+
+.time span {
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  background: #1a1a1a;
+  gap: 16px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #333;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    max-height: none;
+  }
+
+  .header {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .artist {
+    font-size: 13px;
+  }
+
+  .controls {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .playBtn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .progressBar {
+    height: 4px;
+  }
+
+  .progressBar::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .progressBar::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+  }
+
+  .time {
+    font-size: 11px;
+  }
+
+  .time span {
+    min-width: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .artist {
+    font-size: 12px;
+  }
+
+  .controls {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .playBtn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .progressBar {
+    height: 3px;
+  }
+}
