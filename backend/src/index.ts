@@ -1,120 +1,96 @@
-import express from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
-import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { createClient } from 'redis';
-import { createAdapter } from '@socket.io/redis-adapter';
-import pool from './db/client';
-import authRoutes from './routes/auth';
-import roomRoutes from './routes/rooms';
-import performanceRoutes from './routes/performances';
-// Phase 4: YouTube Integration
-import songsRoutes from './routes/songs';
-import playlistsRoutes from './routes/playlists';
-import favoritesRoutes from './routes/favorites';
-import { setupWebSocketHandlers } from './handlers/websocket';
+import { Pool } from 'pg';
+import redis from 'redis';
+import { createAdapter } from 'socket.io-redis';
 
 dotenv.config();
 
-const app = express();
+// Inicializar Express
+const app: Express = express();
 const httpServer = createServer(app);
-const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const io = new SocketIOServer(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true
+  }
+});
 
 // Middleware
-app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-  credentials: true,
-}));
-app.use(morgan('combined'));
+app.use(cors());
+app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+// Configurar Redis para Socket.IO
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
+
+redisClient.connect().catch(err => console.error('Redis connection failed:', err));
+
+const pubClient = redisClient.duplicate();
+pubClient.connect().catch(err => console.error('Redis pub connection failed:', err));
+
+io.adapter(createAdapter(pubClient, pubClient));
+
+// Pool de conexão PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+// Testar conexão
+pool.query('SELECT NOW()', (err, result) => {
+  if (err) {
+    console.error('Database connection failed:', err);
+  } else {
+    console.log('Database connected:', result?.rows[0]);
+  }
+});
+
+// Rotas básicas
+app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/performances', performanceRoutes);
-
-// Phase 4: YouTube Integration Routes
-app.use('/api/songs', songsRoutes);
-app.use('/api/playlists', playlistsRoutes);
-
-// Users Routes (Favorites + Performances + Stats)
-import usersRoutes from './routes/users';
-app.use('/api/users', usersRoutes);
-
-// Legacy: Keep favorites routes for backward compatibility
-app.use('/api/users', favoritesRoutes);
-
-// Socket.IO configuration
-const io = new SocketIOServer(httpServer, {
-  cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
-    credentials: true,
-  },
+app.get('/api/songs', async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM songs LIMIT 10');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
-// Redis adapter for Socket.IO (for multi-instance deployment)
-async function setupRedisAdapter() {
-  try {
-    const pubClient = createClient({ url: process.env.REDIS_URL || 'redis://redis:6379' });
-    const subClient = pubClient.duplicate();
+// Socket.IO events
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
 
-    await Promise.all([pubClient.connect(), subClient.connect()]);
-    io.adapter(createAdapter(pubClient, subClient));
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
 
-    console.log('Redis adapter connected');
-  } catch (error) {
-    console.error('Redis adapter error:', error);
-    console.log('Continuing without Redis adapter (single instance mode)');
-  }
-}
+  socket.on('start_recording', (data) => {
+    socket.broadcast.emit('user_recording', {
+      userId: socket.id,
+      songId: data.songId
+    });
+  });
 
-// Setup WebSocket handlers
-setupWebSocketHandlers(io);
-
-// Error handling
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal Server Error',
-    status: err.status || 500,
+  socket.on('audio_chunk', (data) => {
+    socket.broadcast.emit('audio_chunk', {
+      userId: socket.id,
+      chunk: data.chunk
+    });
   });
 });
 
-// Database connection test
-async function testDatabaseConnection() {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    console.log('Database connected:', result.rows[0]);
-  } catch (error) {
-    console.error('Database connection failed:', error);
-    process.exit(1);
-  }
-}
-
-// Start server
-async function start() {
-  await testDatabaseConnection();
-  await setupRedisAdapter();
-
-  httpServer.listen(PORT, () => {
-    console.log(`🎤 Videoke server running on port ${PORT} (${NODE_ENV})`);
-  });
-}
-
-start().catch((error) => {
-  console.error('Failed to start server:', error);
-  process.exit(1);
+// Iniciar servidor
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-export { app, io };
