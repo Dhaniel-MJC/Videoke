@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
@@ -11,7 +11,7 @@ import { createAdapter } from 'socket.io-redis';
 dotenv.config();
 
 // Inicializar Express
-const app: Express = express();
+const app = express();
 const httpServer = createServer(app);
 const io = new SocketIOServer(httpServer, {
   cors: {
@@ -52,11 +52,11 @@ pool.query('SELECT NOW()', (err, result) => {
 });
 
 // Rotas básicas
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.get('/api/songs', async (req: Request, res: Response) => {
+app.get('/api/songs', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM songs LIMIT 10');
     res.json(result.rows);
